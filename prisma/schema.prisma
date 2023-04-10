@@ -55,6 +55,8 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    jobListings   JobListing[]
+    jobApplications JobApplication[]
 }
 
 model VerificationToken {
@@ -63,4 +65,32 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+// React Role tables
+
+model JobListing {
+    id                  String           @id @default(cuid())
+    title               String
+    description         String
+    requirements        String
+    salary              Int?
+    location            String
+    remote              Boolean          @default(false)
+    applicationDeadline DateTime?
+    createdAt           DateTime         @default(now())
+    updatedAt           DateTime         @updatedAt
+    userId              String
+    user                User             @relation(fields: [userId], references: [id])
+    jobApplications     JobApplication[]
+}
+
+model JobApplication {
+    id         String     @id @default(cuid())
+    jobId      String
+    userId     String
+    jobListing JobListing @relation(fields: [jobId], references: [id])
+    user       User       @relation(fields: [userId], references: [id])
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
 }
