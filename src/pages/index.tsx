@@ -148,7 +148,7 @@ const Content: React.FC = () => {
       )}
       <div className="flex flex-col w-screen py-4 max-w-4xl">
         {jobs?.map((job) => (
-          <div key={job.id} className="flex justify-between py-4 align-center items-center border border-sky-500 p-4 my-2">
+          <div key={job.id} className="flex justify-between py-4 align-center items-center border border-sky-500 p-4 my-2 rounded">
             <div className="flex flex-col">
               <h1>{job.title}</h1>
               <p>{job.company}</p>
