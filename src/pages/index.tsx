@@ -93,7 +93,7 @@ const PostJobForm: React.FC = () => {
           </div>
           <div className="form-control">
             <label className="label cursor-pointer">
-              <span className="label-text">Remote ok?</span>
+              <span className="label-text">Remote?</span>
               <input
                 type="checkbox"
                 className="toggle"
