@@ -1,14 +1,12 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 import { api } from "~/utils/api";
 import { Header } from "~/components/Header";
+import { useState } from "react";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-
   return (
     <>
       <Head>
@@ -26,33 +24,107 @@ const Home: NextPage = () => {
 
 export default Home;
 
-const Content: React.FC = () => {
-  const { data: sessionData } = useSession();
+const PostJobForm: React.FC = () => {
+  const { refetch: refetchJobs } = api.jobs.getAll.useQuery();
+  const defaultFormState = {
+    title: "",
+    description: "",
+    location: "",
+    requirements: "",
+    remote: false,
+  }
+  const [formState, setFormState] = useState(defaultFormState)
 
-  const { data: jobs, refetch: refetchJobs } = api.jobs.getAll.useQuery()
-  return <div>{JSON.stringify(jobs)}</div>
-};
-
-const AuthShowcase: React.FC = () => {
-  const { data: sessionData } = useSession();
-
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined },
-  );
-
+  const createJob = api.jobs.create.useMutation({
+    onSuccess: () => {
+      void refetchJobs();
+      setFormState(defaultFormState)
+    },
+  });
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-2xl text-white">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-        {secretMessage && <span> - {secretMessage}</span>}
-      </p>
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </button>
+    <>
+      <input type="checkbox" id="job-modal" className="modal-toggle" />
+      <div className="modal">
+        <div className="modal-box relative">
+          <label htmlFor="job-modal" className="btn btn-sm btn-circle absolute right-2 top-2">
+            ✕
+          </label>
+          <h3 className="text-lg font-bold">Job</h3>
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Job title</span>
+            </label>
+            <input onChange={e => setFormState({ ...formState, title: e.target.value })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+          </div>
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Job description?</span>
+            </label>
+            <input onChange={e => setFormState({ ...formState, description: e.target.value })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+          </div>
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Location</span>
+            </label>
+            <input onChange={e => setFormState({ ...formState, location: e.target.value })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Requirements</span>
+            </label>
+            <textarea onChange={e => setFormState({ ...formState, requirements: e.target.value })} className="textarea textarea-bordered h-24" placeholder="Job requirements"></textarea>
+          </div>
+          <div className="form-control">
+            <label className="label cursor-pointer">
+              <span className="label-text">Remote ok?</span>
+              <input
+                type="checkbox"
+                className="toggle"
+                checked={formState.remote}
+                onChange={e => {
+                  const isChecked = e.target.checked;
+                  setFormState((prevState) => ({
+                    ...prevState,
+                    remote: isChecked,
+                  }));
+                }} />
+            </label>
+          </div>
+          <button
+            className="btn-primary p-2 w-full mt-2"
+            onClick={() => {
+              const jobModal = document.getElementById('job-modal') as HTMLInputElement;
+              if (jobModal) {
+                jobModal.checked = false;
+              }
+              createJob.mutate(formState)
+            }}
+          >
+            Post job
+          </button>
+        </div>
+      </div>
+    </>
+  )
+}
+
+const Content: React.FC = () => {
+  const { data: jobs } = api.jobs.getAll.useQuery();
+  const { data: sessionData } = useSession();
+  return (
+    <div className="p-16 flex flex-col align-center items-center w-screen justify-center">
+      <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-slate-900 md:text-5xl lg:text-6xl dark:text-white">React Roles</h1>
+      <p className="mb-6 text-lg font-normal text-slate-500 lg:text-xl sm:px-16 xl:px-48 dark:text-slate-400 text-center">Welcome to ReactRoles, the premier job board dedicated to React developers! Discover a curated selection of exciting job opportunities in the React ecosystem, ranging from startups to leading tech companies.</p>
+      {/* The button to open modal */}
+      {sessionData?.user && (
+        <>
+          <label htmlFor="job-modal" className="btn-primary p-4">
+            post a job
+          </label>
+          <PostJobForm />
+        </>
+      )}
+      <div>{JSON.stringify(jobs)}</div>
     </div>
-  );
+  )
 };

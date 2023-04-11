@@ -7,7 +7,12 @@ export const jobRouter = createTRPCRouter({
     return ctx.prisma.jobListing.findMany();
   }),
     create: protectedProcedure
-    .input(z.object({ title: z.string(), description: z.string(), requirements: z.string(), location: z.string() }))
+    .input(z.object({
+      title: z.string(),
+      description: z.string(),
+      requirements: z.string(),
+      location: z.string(),
+      remote: z.boolean(),}))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.jobListing.create({
         data: {
