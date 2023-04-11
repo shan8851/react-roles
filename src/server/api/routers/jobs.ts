@@ -6,9 +6,20 @@ export const jobRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.jobListing.findMany();
   }),
+    delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.jobListing.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
     create: protectedProcedure
     .input(z.object({
+      company: z.string(),
       title: z.string(),
+      salary: z.number(),
       description: z.string(),
       requirements: z.string(),
       location: z.string(),
@@ -16,7 +27,9 @@ export const jobRouter = createTRPCRouter({
     .mutation(({ ctx, input }) => {
       return ctx.prisma.jobListing.create({
         data: {
+          company: input.company,
           title: input.title,
+          salary: input.salary,
           description: input.description,
           requirements: input.requirements,
           location: input.location,

@@ -73,6 +73,7 @@ model JobListing {
     id                  String           @id @default(cuid())
     title               String
     description         String
+    company             String
     requirements        String
     salary              Int?
     location            String

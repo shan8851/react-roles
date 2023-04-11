@@ -5,6 +5,9 @@ import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { Header } from "~/components/Header";
 import { useState } from "react";
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime);
 
 const Home: NextPage = () => {
   return (
@@ -27,7 +30,9 @@ export default Home;
 const PostJobForm: React.FC = () => {
   const { refetch: refetchJobs } = api.jobs.getAll.useQuery();
   const defaultFormState = {
+    company: "",
     title: "",
+    salary: 0,
     description: "",
     location: "",
     requirements: "",
@@ -52,27 +57,39 @@ const PostJobForm: React.FC = () => {
           <h3 className="text-lg font-bold">Job</h3>
           <div className="form-control w-full">
             <label className="label">
+              <span className="label-text">Company</span>
+            </label>
+            <input onChange={e => setFormState({ ...formState, company: e.target.value })} type="text" placeholder="Type here" className="input input-bordered w-full outline-none" />
+          </div>
+          <div className="form-control w-full">
+            <label className="label">
               <span className="label-text">Job title</span>
             </label>
-            <input onChange={e => setFormState({ ...formState, title: e.target.value })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+            <input onChange={e => setFormState({ ...formState, title: e.target.value })} type="text" placeholder="Type here" className="input input-bordered w-full outline-none" />
+          </div>
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Salary</span>
+            </label>
+            <input onChange={e => setFormState({ ...formState, salary: +e.target.value })} type="number" placeholder="Type here" className="input input-bordered w-full outline-none" />
           </div>
           <div className="form-control w-full">
             <label className="label">
               <span className="label-text">Job description?</span>
             </label>
-            <input onChange={e => setFormState({ ...formState, description: e.target.value })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+            <input onChange={e => setFormState({ ...formState, description: e.target.value })} type="text" placeholder="Type here" className="input input-bordered w-full outline-none" />
           </div>
           <div className="form-control w-full">
             <label className="label">
               <span className="label-text">Location</span>
             </label>
-            <input onChange={e => setFormState({ ...formState, location: e.target.value })} type="text" placeholder="Type here" className="input input-bordered w-full" />
+            <input onChange={e => setFormState({ ...formState, location: e.target.value })} type="text" placeholder="Type here" className="input input-bordered w-full outline-none" />
           </div>
           <div className="form-control">
             <label className="label">
               <span className="label-text">Requirements</span>
             </label>
-            <textarea onChange={e => setFormState({ ...formState, requirements: e.target.value })} className="textarea textarea-bordered h-24" placeholder="Job requirements"></textarea>
+            <textarea onChange={e => setFormState({ ...formState, requirements: e.target.value })} className="textarea textarea-bordered h-24 outline-none" placeholder="Job requirements"></textarea>
           </div>
           <div className="form-control">
             <label className="label cursor-pointer">
@@ -109,8 +126,13 @@ const PostJobForm: React.FC = () => {
 }
 
 const Content: React.FC = () => {
-  const { data: jobs } = api.jobs.getAll.useQuery();
+  const { data: jobs, refetch: refetchJobs } = api.jobs.getAll.useQuery();
   const { data: sessionData } = useSession();
+    const deleteJob = api.jobs.delete.useMutation({
+    onSuccess: () => {
+      void refetchJobs();
+    },
+  });
   return (
     <div className="p-16 flex flex-col align-center items-center w-screen justify-center">
       <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-slate-900 md:text-5xl lg:text-6xl dark:text-white">React Roles</h1>
@@ -124,7 +146,24 @@ const Content: React.FC = () => {
           <PostJobForm />
         </>
       )}
-      <div>{JSON.stringify(jobs)}</div>
+      <div className="flex flex-col w-screen py-4 max-w-4xl">
+        {jobs?.map((job) => (
+          <div key={job.id} className="flex justify-between py-4 align-center items-center">
+            <div className="flex flex-col">
+              <h1>{job.title}</h1>
+              <p>{job.company}</p>
+            </div>
+            <div className="flex gap-2">
+              <p className="text-slate-600 text-xs">{dayjs(job.createdAt).fromNow()}</p>
+              <button className="btn-warning btn-xs btn px-5" onClick={() => void deleteJob.mutate({ id: job.id })}>
+                Delete
+              </button>
+            </div>
+
+          </div>
+        )
+        )}
+      </div>
     </div>
   )
 };
