@@ -152,6 +152,7 @@ const Content: React.FC = () => {
             <div className="flex flex-col">
               <h1>{job.title}</h1>
               <p>{job.company}</p>
+              <p className="text-sm text-slate-500">${job.salary}</p>
             </div>
             <div className="flex gap-2">
               <p className="text-slate-600 text-xs">{dayjs(job.createdAt).fromNow()}</p>
