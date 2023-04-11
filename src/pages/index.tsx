@@ -140,7 +140,7 @@ const Content: React.FC = () => {
       {/* The button to open modal */}
       {sessionData?.user && (
         <>
-          <label htmlFor="job-modal" className="btn-primary p-4">
+          <label htmlFor="job-modal" className="btn-primary p-4 rounded">
             post a job
           </label>
           <PostJobForm />
