@@ -43,7 +43,7 @@ export const PostJobForm: React.FC = () => {
   )
   return (
     <div className="flex flex-col w-screen max-w-4xl mx-auto">
-      {!success && <SuccessMessage />}
+      {success && <SuccessMessage />}
       <div className="form-control w-full">
         <label className="label">
           <span className="label-text">Company</span>

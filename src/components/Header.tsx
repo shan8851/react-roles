@@ -1,5 +1,6 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 
 export const Header = () => {
   const { data: sessionData } = useSession();
@@ -10,6 +11,10 @@ export const Header = () => {
         {sessionData?.user?.name ? `Signed in as: ${sessionData.user.name}` : ""}
       </div>
       <div className="flex-none gap-2">
+        <div className="flex gap-2 px-2">
+          <Link href='/'>Home</Link>
+          <Link href='/post-job'>Post a job</Link>
+        </div>
         <div className="dropdown-end dropdown">
           {sessionData?.user ? (
             <label
