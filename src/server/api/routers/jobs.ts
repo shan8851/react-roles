@@ -7,13 +7,15 @@ export const jobRouter = createTRPCRouter({
     title: z.string().optional(),
     company: z.string().optional(),
     location: z.string().optional(),
+    remote: z.boolean().optional(),
   })).query(({ ctx, input }) => {
     return ctx.prisma.jobListing.findMany({
       where: {
         OR: [
           { title: { contains: input.title, mode: 'insensitive' } },
           { company: { contains: input.company, mode: 'insensitive' } },
-          { location: { contains: input.location, mode: 'insensitive' } }
+          { location: { contains: input.location, mode: 'insensitive' } },
+          { remote: input.remote }
         ]
       }
     });

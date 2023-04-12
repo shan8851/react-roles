@@ -126,18 +126,21 @@ const PostJobForm: React.FC = () => {
 }
 
 const Content: React.FC = () => {
-    const [search, setSearch] = useState<string>();
+  const [search, setSearch] = useState<string>();
+  const [showRemote, setShowRemote] = useState<boolean>(false);
   const { data: jobs, refetch: refetchJobs } = api.jobs.getAll.useQuery({
-  title: search,
-  company: search,
-  location: search,
-});
+    title: search,
+    company: search,
+    location: search,
+    // remote: showRemote ? true : false,
+  });
   const { data: sessionData } = useSession();
   const deleteJob = api.jobs.delete.useMutation({
     onSuccess: () => {
       void refetchJobs();
     },
   });
+  console.log(showRemote)
   return (
     <div className="p-16 flex flex-col align-center items-center w-screen justify-center">
       <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-slate-900 md:text-5xl lg:text-6xl dark:text-white">React Roles</h1>
@@ -151,12 +154,23 @@ const Content: React.FC = () => {
           <PostJobForm />
         </>
       )}
-      <div className="m-4">
-        <div className="form-control w-full">
-          <label className="label">
-            <span className="label-text">Search</span>
+      <div className="my-8 flex justify-between items-center w-full gap-4 max-w-4xl">
+        <div className="form-control w-full max-w-2xl">
+          <input value={search} onChange={e => setSearch(e.target.value)} type="text" placeholder="Search by job title, company or location" className="input input-bordered w-full outline-none" />
+        </div>
+        <div className="form-control">
+          <label className="label cursor-pointer">
+            <span className="label-text mr-2">Remote Only?</span>
+            <input
+              type="checkbox"
+              className="toggle"
+              checked={showRemote}
+              onChange={e => {
+                const isChecked = e.target.checked;
+                setShowRemote(isChecked);
+              }}
+            />
           </label>
-          <input value={search} onChange={e => setSearch(e.target.value)} type="text" placeholder="Search" className="input input-bordered w-full outline-none" />
         </div>
       </div>
       <div className="flex flex-col w-screen py-4 max-w-4xl">
