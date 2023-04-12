@@ -129,6 +129,8 @@ const Content: React.FC = () => {
     const [search, setSearch] = useState<string>();
   const { data: jobs, refetch: refetchJobs } = api.jobs.getAll.useQuery({
   title: search,
+  company: search,
+  location: search,
 });
   const { data: sessionData } = useSession();
   const deleteJob = api.jobs.delete.useMutation({

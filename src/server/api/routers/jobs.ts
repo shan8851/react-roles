@@ -3,16 +3,21 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
 export const jobRouter = createTRPCRouter({
-getAll: publicProcedure.input(z.object({
-  title: z.string().optional(),
-})).query(({ ctx, input }) => {
-  console.log(input.title)
-  return ctx.prisma.jobListing.findMany({ where: {
-    title: {
-      contains: input.title, mode: 'insensitive'
-    }
-  } });
-}),
+  getAll: publicProcedure.input(z.object({
+    title: z.string().optional(),
+    company: z.string().optional(),
+    location: z.string().optional(),
+  })).query(({ ctx, input }) => {
+    return ctx.prisma.jobListing.findMany({
+      where: {
+        OR: [
+          { title: { contains: input.title, mode: 'insensitive' } },
+          { company: { contains: input.company, mode: 'insensitive' } },
+          { location: { contains: input.location, mode: 'insensitive' } }
+        ]
+      }
+    });
+  }),
 
 
   delete: protectedProcedure
