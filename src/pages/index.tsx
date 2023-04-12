@@ -7,6 +7,8 @@ import { Header } from "~/components/Header";
 import { useState } from "react";
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import useDebounce from "~/hooks/useDebounce";
+import { Spinner } from "~/components/Spinner";
 dayjs.extend(relativeTime);
 
 const Home: NextPage = () => {
@@ -126,12 +128,13 @@ const PostJobForm: React.FC = () => {
 }
 
 const Content: React.FC = () => {
-  const [search, setSearch] = useState<string>();
+  const [search, setSearch] = useState<string>('');
   const [showRemote, setShowRemote] = useState<boolean>(false);
-  const { data: jobs, refetch: refetchJobs } = api.jobs.getAll.useQuery({
-    title: search,
-    company: search,
-    location: search,
+  const debouncedValue = useDebounce<string>(search, 1000);
+  const { data: jobs, refetch: refetchJobs, isLoading, isFetching } = api.jobs.getAll.useQuery({
+    title: debouncedValue,
+    company: debouncedValue,
+    location: debouncedValue,
     // remote: showRemote ? true : false,
   });
   const { data: sessionData } = useSession();
@@ -140,7 +143,7 @@ const Content: React.FC = () => {
       void refetchJobs();
     },
   });
-  console.log(showRemote)
+
   return (
     <div className="p-16 flex flex-col align-center items-center w-screen justify-center">
       <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-slate-900 md:text-5xl lg:text-6xl dark:text-white">React Roles</h1>
@@ -173,7 +176,13 @@ const Content: React.FC = () => {
           </label>
         </div>
       </div>
-      <div className="flex flex-col w-screen py-4 max-w-4xl">
+      {isLoading || isFetching && (
+        <div className="flex justify-center items-center w-full h-64">
+          <Spinner />
+        </div>
+      )}
+      {!isLoading && !isFetching && (
+        <div className="flex flex-col w-screen py-4 max-w-4xl">
         {jobs?.map((job) => (
           <div key={job.id} className="flex justify-between py-4 align-center items-center border border-sky-500 p-4 my-2 rounded">
             <div className="flex flex-col">
@@ -192,6 +201,7 @@ const Content: React.FC = () => {
         )
         )}
       </div>
+      )}
     </div>
   )
 };
