@@ -3,10 +3,19 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
 export const jobRouter = createTRPCRouter({
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.jobListing.findMany();
-  }),
-    delete: protectedProcedure
+getAll: publicProcedure.input(z.object({
+  title: z.string().optional(),
+})).query(({ ctx, input }) => {
+  console.log(input.title)
+  return ctx.prisma.jobListing.findMany({ where: {
+    title: {
+      contains: input.title, mode: 'insensitive'
+    }
+  } });
+}),
+
+
+  delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.jobListing.delete({
@@ -15,7 +24,7 @@ export const jobRouter = createTRPCRouter({
         },
       });
     }),
-    create: protectedProcedure
+  create: protectedProcedure
     .input(z.object({
       company: z.string(),
       title: z.string(),
@@ -23,7 +32,8 @@ export const jobRouter = createTRPCRouter({
       description: z.string(),
       requirements: z.string(),
       location: z.string(),
-      remote: z.boolean(),}))
+      remote: z.boolean(),
+    }))
     .mutation(({ ctx, input }) => {
       return ctx.prisma.jobListing.create({
         data: {

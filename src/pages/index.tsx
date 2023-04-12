@@ -28,7 +28,7 @@ const Home: NextPage = () => {
 export default Home;
 
 const PostJobForm: React.FC = () => {
-  const { refetch: refetchJobs } = api.jobs.getAll.useQuery();
+  const { refetch: refetchJobs } = api.jobs.getAll.useQuery({});
   const defaultFormState = {
     company: "",
     title: "",
@@ -126,9 +126,12 @@ const PostJobForm: React.FC = () => {
 }
 
 const Content: React.FC = () => {
-  const { data: jobs, refetch: refetchJobs } = api.jobs.getAll.useQuery();
+    const [search, setSearch] = useState<string>();
+  const { data: jobs, refetch: refetchJobs } = api.jobs.getAll.useQuery({
+  title: search,
+});
   const { data: sessionData } = useSession();
-    const deleteJob = api.jobs.delete.useMutation({
+  const deleteJob = api.jobs.delete.useMutation({
     onSuccess: () => {
       void refetchJobs();
     },
@@ -146,6 +149,14 @@ const Content: React.FC = () => {
           <PostJobForm />
         </>
       )}
+      <div className="m-4">
+        <div className="form-control w-full">
+          <label className="label">
+            <span className="label-text">Search</span>
+          </label>
+          <input value={search} onChange={e => setSearch(e.target.value)} type="text" placeholder="Search" className="input input-bordered w-full outline-none" />
+        </div>
+      </div>
       <div className="flex flex-col w-screen py-4 max-w-4xl">
         {jobs?.map((job) => (
           <div key={job.id} className="flex justify-between py-4 align-center items-center border border-sky-500 p-4 my-2 rounded">
