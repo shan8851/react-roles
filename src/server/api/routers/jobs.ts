@@ -35,9 +35,10 @@ export const jobRouter = createTRPCRouter({
     .input(z.object({
       company: z.string(),
       title: z.string(),
-      salary: z.number(),
+      salaryMin: z.number(),
+      salaryMax: z.number(),
       description: z.string(),
-      requirements: z.string(),
+      tags: z.array(z.string()),
       location: z.string(),
       remote: z.boolean(),
     }))
@@ -46,9 +47,10 @@ export const jobRouter = createTRPCRouter({
         data: {
           company: input.company,
           title: input.title,
-          salary: input.salary,
+          salaryMin: input.salaryMin,
+          salaryMax: input.salaryMax,
           description: input.description,
-          requirements: input.requirements,
+          tags: input.tags,
           location: input.location,
           userId: ctx.session.user.id,
         },

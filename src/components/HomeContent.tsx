@@ -2,11 +2,13 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import useDebounce from "~/hooks/useDebounce";
-import { api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/utils/api";
 import { Spinner } from "./Spinner";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime);
+
+type Job = RouterOutputs["jobs"]["getAll"][0];
 
 
 export const HomeContent: React.FC = () => {
@@ -26,61 +28,97 @@ export const HomeContent: React.FC = () => {
     },
   });
 
+  const userId = sessionData?.user.id
+
   return (
     <div className="p-16 flex flex-col align-center items-center w-screen justify-center max-w-6xl mx-auto">
-      <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-slate-900 md:text-5xl lg:text-6xl dark:text-white">React Roles</h1>
-      <p className="mb-6 text-lg font-normal text-slate-500 lg:text-xl sm:px-16 xl:px-48 dark:text-slate-400 text-center">Welcome to ReactRoles, the premier job board dedicated to React developers! Discover a curated selection of exciting job opportunities in the React ecosystem, ranging from startups to leading tech companies.</p>
+      <h1 className="mb-4 text-3xl font-extrabold md:text-3xl lg:text-5xl text-center">Welcome to React Role Wonderland!</h1>
+      <p className="mb-6 text-lg font-normal lg:text-xl sm:px-16 xl:px-48 text-center">
+        Hello, React buddies! You&apos;ve landed in the perfect spot to find your dream React job. Browse through our collection of handpicked opportunities, tailor-made for the awesome React developer you are. Ready, set, explore! Your next big adventure is just a few clicks away.
+      </p>
+
       {sessionData?.user && (
         <Link href='/post-job'>
-          <button className="btn-primary p-4 rounded">
-          Post a job
-        </button>
+          <button className="btn p-4 btn-lg">
+            Post a job
+          </button>
         </Link>
       )}
-      <div className="my-8 flex justify-between items-center w-full gap-4 max-w-4xl">
-        <div className="form-control w-full max-w-2xl">
-          <input value={search} onChange={e => setSearch(e.target.value)} type="text" placeholder="Search by job title, company or location" className="input input-bordered w-full outline-none" />
+      {!isLoading && !isFetching && jobs?.length === 0 && (
+        <h1 className="my-4 text-4xl font-extrabold md:text-5xl lg:text-6xl">Nothing to see here...</h1>
+      )}
+      {!isLoading && !isFetching && jobs && jobs.length > 0 && (
+        <div className="my-8 flex justify-between items-center w-full gap-4 max-w-4xl">
+          <div className="form-control w-full max-w-2xl">
+            <input value={search} onChange={e => setSearch(e.target.value)} type="text" placeholder="Search by job title, company or location" className="input input-bordered border-4 border-black w-full outline-none" />
+          </div>
+          <div className="form-control">
+            <label className="label cursor-pointer">
+              <span className="label-text mr-2">Remote Only?</span>
+              <input
+                type="checkbox"
+                className="toggle-secondary toggle-lg"
+                checked={showRemote}
+                onChange={e => {
+                  const isChecked = e.target.checked;
+                  setShowRemote(isChecked);
+                }}
+              />
+            </label>
+          </div>
         </div>
-        <div className="form-control">
-          <label className="label cursor-pointer">
-            <span className="label-text mr-2">Remote Only?</span>
-            <input
-              type="checkbox"
-              className="toggle"
-              checked={showRemote}
-              onChange={e => {
-                const isChecked = e.target.checked;
-                setShowRemote(isChecked);
-              }}
-            />
-          </label>
-        </div>
-      </div>
+      )}
       {isLoading || isFetching && (
         <div className="flex justify-center items-center w-full h-64">
           <Spinner />
         </div>
       )}
-      {!isLoading && !isFetching && (
+      {jobs && !isLoading && !isFetching && (
         <div className="flex flex-col w-screen py-4 max-w-4xl">
-        {jobs?.map((job) => (
-          <div key={job.id} className="flex justify-between py-4 align-center items-center border border-sky-500 p-4 my-2 rounded">
-            <div className="flex flex-col">
-              <h1>{job.title}</h1>
-              <p>{job.company}</p>
-              <p className="text-sm text-slate-500">${job.salary}</p>
-            </div>
-            <div className="flex gap-2">
-              <p className="text-slate-600 text-xs">{dayjs(job.createdAt).fromNow()}</p>
-              <button className="btn-warning btn-xs btn px-5" onClick={() => void deleteJob.mutate({ id: job.id })}>
-                Delete
-              </button>
-            </div>
+          {jobs.map((job: Job, index) => (
+            <div key={job.id} tabIndex={index} className="collapse collapse-arrow border-4 border-black my-4">
+              <div className="collapse-title text-xl font-medium">
+                <div className="flex justify-between align-center items-center">
+                  <div className="flex flex-col">
+                    <h1>{job.title}</h1>
+                    <p>{job.company}</p>
+                    <p className="text-green-400">
+                      {`$${(job.salaryMin as number).toLocaleString()} - $${(job.salaryMax as number).toLocaleString()}`}
+                    </p>
 
-          </div>
-        )
-        )}
-      </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <p className="text-xs">{dayjs(job.createdAt).fromNow()}</p>
+                    {userId === job.userId && (
+                      <button className="btn-secondary btn-xs btn px-5" onClick={() => void deleteJob.mutate({ id: job.id })}>
+                        Delete
+                      </button>
+                    )}
+                  </div>
+
+                </div>
+              </div>
+              <div className="collapse-content">
+                <div className="flex flex-col gap-4">
+                  <h2 className="text-2xl">Job Description</h2>
+                  <p>{job.description}</p>
+                  <h3 className="text-2xl">Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {(job.tags as string[]).map(tag => (
+                      <div key={`${tag} ${index}`} className="badge badge-accent gap-1 p-3">
+                        {tag}
+                      </div>
+                    ))}
+                  </div>
+                  <button className="btn w-full my6">
+                    Apply
+                  </button>
+                </div>
+              </div>
+            </div>
+          )
+          )}
+        </div>
       )}
     </div>
   )

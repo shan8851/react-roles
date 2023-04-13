@@ -74,8 +74,10 @@ model JobListing {
     title               String
     description         String
     company             String
-    requirements        String
-    salary              Int?
+    tags                String[]
+    promoted            Boolean          @default(false)
+    salaryMin           Int
+    salaryMax           Int
     location            String
     remote              Boolean          @default(false)
     applicationDeadline DateTime?

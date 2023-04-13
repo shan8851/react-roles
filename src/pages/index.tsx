@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { Header } from "~/components/Header";
 import { HomeContent } from "~/components/HomeContent";
 
 const Home: NextPage = () => {
@@ -12,7 +11,6 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Header />
         <HomeContent />
       </main>
     </>
