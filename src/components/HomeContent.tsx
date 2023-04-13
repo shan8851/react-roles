@@ -83,7 +83,7 @@ export const HomeContent: React.FC = () => {
                     <h1>{job.title}</h1>
                     <p>{job.company}</p>
                     <p className="text-green-400">
-                      {`$${(job.salaryMin as number).toLocaleString()} - $${(job.salaryMax as number).toLocaleString()}`}
+                      {`$${job.salaryMin.toLocaleString()} - $${job.salaryMax.toLocaleString()}`}
                     </p>
 
                   </div>
@@ -104,7 +104,7 @@ export const HomeContent: React.FC = () => {
                   <p>{job.description}</p>
                   <h3 className="text-2xl">Tags</h3>
                   <div className="flex flex-wrap gap-2">
-                    {(job.tags as string[]).map(tag => (
+                    {job.tags.map(tag => (
                       <div key={`${tag} ${index}`} className="badge badge-accent gap-1 p-3">
                         {tag}
                       </div>
