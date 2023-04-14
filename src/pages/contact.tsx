@@ -17,7 +17,7 @@ const Contact: NextPage = () => {
   const [message, setMessage] = useState('');
 
   // Please update the Access Key in the .env
-  const apiKey = process.env.PUBLIC_ACCESS_KEY;
+  const apiKey = process.env.NEXT_PUBLIC_ACCESS_KEY;
 
   const { submit: onSubmit } = useWeb3Forms({
     access_key: apiKey!,

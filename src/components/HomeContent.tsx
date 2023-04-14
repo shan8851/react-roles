@@ -39,13 +39,17 @@ export const HomeContent: FC = () => {
       <p className="my-6 text-md font-normal lg:text-lg sm:px-16 xl:px-48 text-center">
         Hey champ! You&apos;ve landed in the perfect spot to find your dream React job. Browse through our collection of handpicked opportunities, tailor-made for the awesome React developer you are. Ready, set, explore! Your next big adventure is just a few clicks away.
       </p>
-
       {sessionData?.user && (
         <Link href='/post-job'>
           <button className="btn p-4 btn-lg">
             Post a job
           </button>
         </Link>
+      )}
+      {isLoading || isFetching && (
+        <div className="flex justify-center items-center w-full h-64">
+          <Spinner />
+        </div>
       )}
       {!isLoading && !isFetching && jobs?.length === 0 && (
         <h2 className="my-4 text-2xl font-bold md:text-5xl lg:text-6xl">Nothing to see here...</h2>
@@ -69,11 +73,6 @@ export const HomeContent: FC = () => {
               />
             </label>
           </div>
-        </div>
-      )}
-      {isLoading || isFetching && (
-        <div className="flex justify-center items-center w-full h-64">
-          <Spinner />
         </div>
       )}
       {jobs && !isLoading && !isFetching && (
