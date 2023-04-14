@@ -10,8 +10,8 @@ const Contact: NextPage = () => {
     </Head>
     <main>
       <div className="p-16 flex flex-col align-center items-center w-screen justify-center max-w-6xl mx-auto">
-        <h1 className="mb-4 text-4xl font-extrabold md:text-5xl lg:text-6xl">Let&apos;s Chat, React Pals!</h1>
-        <p className="mb-6 text-lg font-normal lg:text-xl sm:px-16 xl:px-48 text-center">
+        <h1 className="mb-4 text-3xl font-extrabold lg:text-4xl text-center">Let&apos;s Chat, React Pals!</h1>
+        <p className="mb-6 text-md font-normal lg:text-lg sm:px-16 xl:px-48 text-center">
           Hey there, friend! Got a question, suggestion, or just want to say hi? We&apos;re all ears! Fill out the contact form below, and our React-loving team will get back to you as soon as possible. We can&apos;t wait to hear from you and help make your React journey even more awesome!
         </p>
         <div className="form-control w-full max-w-lg">

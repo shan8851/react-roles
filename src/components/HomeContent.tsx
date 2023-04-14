@@ -31,10 +31,10 @@ export const HomeContent: React.FC = () => {
   const userId = sessionData?.user.id
 
   return (
-    <div className="p-16 flex flex-col align-center items-center w-screen justify-center max-w-6xl mx-auto">
-      <h1 className="mb-4 text-3xl font-extrabold md:text-3xl lg:text-5xl text-center">Welcome to React Role Wonderland!</h1>
-      <p className="mb-6 text-lg font-normal lg:text-xl sm:px-16 xl:px-48 text-center">
-        Hello, React buddies! You&apos;ve landed in the perfect spot to find your dream React job. Browse through our collection of handpicked opportunities, tailor-made for the awesome React developer you are. Ready, set, explore! Your next big adventure is just a few clicks away.
+    <div className="p-4 md:p-16 flex flex-col align-center items-center w-screen justify-center max-w-6xl mx-auto">
+      <h1 className="mb-4 text-3xl font-extrabold lg:text-4xl text-center">Welcome to React Role Wonderland!</h1>
+      <p className="mb-6 text-md font-normal lg:text-lg sm:px-16 xl:px-48 text-center">
+        Hey champ! You&apos;ve landed in the perfect spot to find your dream React job. Browse through our collection of handpicked opportunities, tailor-made for the awesome React developer you are. Ready, set, explore! Your next big adventure is just a few clicks away.
       </p>
 
       {sessionData?.user && (
@@ -45,10 +45,10 @@ export const HomeContent: React.FC = () => {
         </Link>
       )}
       {!isLoading && !isFetching && jobs?.length === 0 && (
-        <h1 className="my-4 text-4xl font-extrabold md:text-5xl lg:text-6xl">Nothing to see here...</h1>
+        <h2 className="my-4 text-2xl font-bold md:text-5xl lg:text-6xl">Nothing to see here...</h2>
       )}
       {!isLoading && !isFetching && jobs && jobs.length > 0 && (
-        <div className="my-8 flex justify-between items-center w-full gap-4 max-w-4xl">
+        <div className="flex flex-col sm:flex-row my-4 md:my-8 sm:justify-between sm:items-center w-full gap-4 max-w-4xl">
           <div className="form-control w-full max-w-2xl">
             <input value={search} onChange={e => setSearch(e.target.value)} type="text" placeholder="Search by job title, company or location" className="input input-bordered border-4 border-black w-full outline-none" />
           </div>
@@ -74,18 +74,17 @@ export const HomeContent: React.FC = () => {
         </div>
       )}
       {jobs && !isLoading && !isFetching && (
-        <div className="flex flex-col w-screen py-4 max-w-4xl">
+        <div className="flex flex-col w-full py-4 max-w-4xl">
           {jobs.map((job: Job, index) => (
             <div key={job.id} tabIndex={index} className="collapse collapse-arrow border-4 border-black my-4">
               <div className="collapse-title text-xl font-medium">
-                <div className="flex justify-between align-center items-center">
+                <div className="flex flex-col gap-8 md:flex-row justify-between align-center md:items-center">
                   <div className="flex flex-col">
                     <h1>{job.title}</h1>
                     <p>{job.company}</p>
-                    <p className="text-green-400">
+                    <p className="bg-primary">
                       {`$${job.salaryMin.toLocaleString()} - $${job.salaryMax.toLocaleString()}`}
                     </p>
-
                   </div>
                   <div className="flex gap-2">
                     <p className="text-xs">{dayjs(job.createdAt).fromNow()}</p>
@@ -95,7 +94,6 @@ export const HomeContent: React.FC = () => {
                       </button>
                     )}
                   </div>
-
                 </div>
               </div>
               <div className="collapse-content">
