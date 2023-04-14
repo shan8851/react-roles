@@ -1,8 +1,11 @@
+import Image from "next/image";
+import { type FC } from "react";
+import Logo from "~/assets/LogoSmall.svg";
 
-export const Footer = () => (
+export const Footer: FC = () => (
 <footer className="footer items-center p-4 bg-neutral text-neutral-content">
   <div className="items-center grid-flow-col">
-    <h1 className="text-primary text-xl font-extrabold">ReactRoles</h1>
+    <Image src={Logo as string} alt="logo" height={45} />
     <p>Copyright © 2023 - All right reserved</p>
   </div>
   <div className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">

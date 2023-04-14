@@ -1,17 +1,20 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
+import { type FC, useState } from "react";
 import useDebounce from "~/hooks/useDebounce";
 import { type RouterOutputs, api } from "~/utils/api";
 import { Spinner } from "./Spinner";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime'
+import Image from "next/image";
+import Logo from '~/assets/LogoSmall.svg'
+
 dayjs.extend(relativeTime);
 
 type Job = RouterOutputs["jobs"]["getAll"][0];
 
 
-export const HomeContent: React.FC = () => {
+export const HomeContent: FC = () => {
   const [search, setSearch] = useState<string>('');
   const [showRemote, setShowRemote] = useState<boolean>(false);
   const debouncedValue = useDebounce<string>(search, 1000);
@@ -32,8 +35,8 @@ export const HomeContent: React.FC = () => {
 
   return (
     <div className="p-4 md:p-16 flex flex-col align-center items-center w-screen justify-center max-w-6xl mx-auto">
-      <h1 className="mb-4 text-3xl font-extrabold lg:text-4xl text-center">Welcome to React Role Wonderland!</h1>
-      <p className="mb-6 text-md font-normal lg:text-lg sm:px-16 xl:px-48 text-center">
+      <Image src={Logo as string} height={90} alt="logo" />
+      <p className="my-6 text-md font-normal lg:text-lg sm:px-16 xl:px-48 text-center">
         Hey champ! You&apos;ve landed in the perfect spot to find your dream React job. Browse through our collection of handpicked opportunities, tailor-made for the awesome React developer you are. Ready, set, explore! Your next big adventure is just a few clicks away.
       </p>
 

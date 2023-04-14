@@ -1,8 +1,10 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { type FC } from "react";
+import Logo from '~/assets/LogoSmall.svg'
 
-export const Header = () => {
+export const Header: FC = () => {
   const { data: sessionData } = useSession();
 
   return (
@@ -28,22 +30,28 @@ export const Header = () => {
 
           </ul>
         </div>
-        <a className="btn btn-ghost normal-case text-xl">ReactRoles</a>
+        <Link
+          href='/'
+          className="btn btn-ghost normal-case text-xl flex align-center"
+        >
+          <Image src={Logo as string} alt="logo" height={45} />
+          ReactRoles
+        </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-              <Link className="btn btn-ghost normal-case text-xl" href='/'>Home</Link>
-            </li>
-            {sessionData?.user && (
-              <li><Link className="btn btn-ghost normal-case text-xl" href='/post-job'>Post a job</Link></li>
-            )}
-            <li>
-              <Link className="btn btn-ghost normal-case text-xl" href='/about'>About</Link>
-            </li>
-            <li>
-              <Link className="btn btn-ghost normal-case text-xl" href='/contact'>Contact</Link>
-            </li>
+            <Link className="btn btn-ghost normal-case text-xl" href='/'>Home</Link>
+          </li>
+          {sessionData?.user && (
+            <li><Link className="btn btn-ghost normal-case text-xl" href='/post-job'>Post a job</Link></li>
+          )}
+          <li>
+            <Link className="btn btn-ghost normal-case text-xl" href='/about'>About</Link>
+          </li>
+          <li>
+            <Link className="btn btn-ghost normal-case text-xl" href='/contact'>Contact</Link>
+          </li>
         </ul>
       </div>
       <div className="navbar-end">
