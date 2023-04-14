@@ -32,25 +32,25 @@ export const Header: FC = () => {
         </div>
         <Link
           href='/'
-          className="btn btn-ghost normal-case text-xl flex align-center"
+          className="btn btn-ghost normal-case flex align-center p-0"
         >
           <Image src={Logo as string} alt="logo" height={45} />
-          ReactRoles
+          <h1 className="text-xl invisible sm:visible">ReactRoles</h1>
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <Link className="btn btn-ghost normal-case text-xl" href='/'>Home</Link>
+            <Link className="btn btn-ghost normal-case text-md md:text-xl" href='/'>Home</Link>
           </li>
           {sessionData?.user && (
-            <li><Link className="btn btn-ghost normal-case text-xl" href='/post-job'>Post a job</Link></li>
+            <li><Link className="btn btn-ghost normal-case text-md md:text-xl" href='/post-job'>Post a job</Link></li>
           )}
           <li>
-            <Link className="btn btn-ghost normal-case text-xl" href='/about'>About</Link>
+            <Link className="btn btn-ghost normal-case text-md md:text-xl" href='/about'>About</Link>
           </li>
           <li>
-            <Link className="btn btn-ghost normal-case text-xl" href='/contact'>Contact</Link>
+            <Link className="btn btn-ghost normal-case text-md md:text-xl" href='/contact'>Contact</Link>
           </li>
         </ul>
       </div>
