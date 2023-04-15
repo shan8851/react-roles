@@ -3,11 +3,16 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const profileRouter = createTRPCRouter({
-  getJobs: protectedProcedure.query(async ({ ctx }) => {
+  getJobs: protectedProcedure.input(z.object({
+    skip: z.number().optional().default(0),
+    take: z.number().optional().default(10),
+  })).query(async ({ ctx, input }) => {
     const userJobs = await ctx.prisma.jobListing.findMany({
       where: {
         userId: ctx.session.user.id,
       },
+      skip: input.skip,
+      take: input.take,
     });
 
     const totalCount = await ctx.prisma.jobListing.count({

@@ -6,19 +6,23 @@ import { Spinner } from "~/components/Spinner";
 import { api } from "~/utils/api";
 
 const Profile: NextPage = () => {
-  const { data, refetch: refetchUserJobs, isLoading, isFetching } = api.profile.getJobs.useQuery();
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 10;
+  const { data, refetch: refetchUserJobs, isLoading, isFetching } = api.profile.getJobs.useQuery({
+    skip: (currentPage - 1) * itemsPerPage,
+    take: itemsPerPage,
+  });
 
   const deleteJob = api.profile.deleteJob.useMutation({
     onSuccess: () => {
       void refetchUserJobs();
     },
   });
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 10;
   const userJobs = data?.userJobs;
   const totalCount = data?.totalCount;
   const numberOfPages = totalCount ? Math.ceil(totalCount / itemsPerPage) : 1;
+
+  console.debug(data)
   return (
     <>
       <Head>
