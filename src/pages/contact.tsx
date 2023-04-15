@@ -45,7 +45,7 @@ const Contact: NextPage = () => {
       </Head>
       <main>
         <div className="p-16 flex flex-col align-center items-center w-screen justify-center max-w-6xl mx-auto">
-          <h1 className="mb-4 text-3xl font-extrabold lg:text-4xl text-center">Let&apos;s Chat, React Pals!</h1>
+          <h1 className="mb-4 text-3xl font-extrabold lg:text-4xl text-center">Let&apos;s Chat!</h1>
           <p className="mb-6 text-md font-normal lg:text-lg sm:px-16 xl:px-48 text-center">
             Hey there, friend! Got a question, suggestion, or just want to say hi? We&apos;re all ears! Fill out the contact form below, and our React-loving team will get back to you as soon as possible. We can&apos;t wait to hear from you and help make your React journey even more awesome!
           </p>
@@ -146,12 +146,12 @@ const Contact: NextPage = () => {
             </button>
           </form>
           {isSubmitSuccessful && isSuccess && (
-            <div className="mt-3 text-sm text-center text-secondary">
+            <div className="mt-3 text-md w-full text-center bg-secondary py-2">
               {message || "Success. Message sent successfully"}
             </div>
           )}
           {isSubmitSuccessful && !isSuccess && (
-            <div className="mt-3 text-sm text-center text-error">
+            <div className="mt-3 text-md text-center bg-error w-full py-2">
               {message || "Something went wrong. Please try later."}
             </div>
           )}

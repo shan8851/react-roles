@@ -7,6 +7,8 @@ import Logo from '~/assets/LogoSmall.svg'
 export const Header: FC = () => {
   const { data: sessionData } = useSession();
 
+  console.log(sessionData)
+
   return (
     <div className="navbar bg-base-300">
       <div className="navbar-start">
@@ -43,6 +45,9 @@ export const Header: FC = () => {
           <li>
             <Link className="btn btn-ghost normal-case text-md md:text-xl" href='/'>Home</Link>
           </li>
+          {sessionData?.user && (
+            <li><Link className="btn btn-ghost normal-case text-md md:text-xl" href='/profile'>Profile</Link></li>
+          )}
           {sessionData?.user && (
             <li><Link className="btn btn-ghost normal-case text-md md:text-xl" href='/post-job'>Post a job</Link></li>
           )}

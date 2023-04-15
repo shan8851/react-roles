@@ -20,6 +20,15 @@ export const jobRouter = createTRPCRouter({
       }
     });
   }),
+    getJob: publicProcedure.input(z.object({
+    id: z.string(),
+  })).query(({ ctx, input }) => {
+    return ctx.prisma.jobListing.findUnique({
+      where: {
+        id: input.id
+      }
+    })
+  }),
 
 
   delete: protectedProcedure
@@ -56,4 +65,33 @@ export const jobRouter = createTRPCRouter({
         },
       });
     }),
+  addView: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.jobListing.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          views: {
+            increment: 1,
+          },
+        },
+      });
+    }),
+    addApply: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.jobListing.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          applyClicked: {
+            increment: 1,
+          },
+        },
+      });
+    }),
+
 });

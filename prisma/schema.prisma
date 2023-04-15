@@ -86,6 +86,8 @@ model JobListing {
     userId              String
     user                User             @relation(fields: [userId], references: [id])
     jobApplications     JobApplication[]
+    views               Int              @default(0)
+    applyClicked        Int              @default(0)
 }
 
 model JobApplication {
