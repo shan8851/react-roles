@@ -1,28 +1,42 @@
-# Create T3 App
+# React Roles: Job Board
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+React Roles is a fun, vibrant, and interactive job board dedicated to React developers. Our platform connects job seekers with exciting opportunities tailored specifically to their skill set, while also allowing companies to find the perfect candidate for their open positions.
 
-## What's next? How do I make an app with this?
+## Tech Stack
+React Roles is built with T3 - using the following technologies:
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+Frontend: Next.js (React)
+Backend: Prisma, TRPC
+Styling: Tailwind CSS
+Database: Supabase
+Authentication: NextAuth.js
+Theme and Style
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+React Roles aims to create a delightful experience for its users by leveraging a visually appealing and engaging design. The UI is modern and intuitive, making it easy for users to navigate through the platform. Our color palette consists of bright and bold colors that convey energy and enthusiasm. The overall tone of React Roles is conversational and lighthearted, making the platform feel welcoming and approachable.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+# Features
 
-## Learn More
+React Roles offers a variety of features designed to create a seamless experience for job seekers and companies alike:
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+Job seekers can:
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+- Search for jobs by title, company, or location
+- Filter job listings by remote work
+- View job details, including salary range and application deadline
+- Easily navigate between job listings with pagination
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+Companies can:
 
-## How do I deploy this?
+Post job listings with detailed information, such as job title, company name, salary range, description, tags, location, and whether the position is remote or not
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Manage and delete their own job listings
+
+## Contributing
+
+We welcome contributions to React Roles! If you'd like to contribute, please follow these steps:
+
+- Fork the repository
+- Create a new branch with a descriptive name
+- Make your changes and commit them to your branch
+- Open a pull request with a detailed description of your changes
+- Thank you for your interest in React Roles, and we look forward to collaborating with you!
