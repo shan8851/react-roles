@@ -9,26 +9,33 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import Image from "next/image";
 import Logo from '~/assets/LogoSmall.svg'
 import { useRouter } from "next/router";
+import Pagination from "./Pagination";
 
 dayjs.extend(relativeTime);
 
-type Job = RouterOutputs["jobs"]["getAll"][0];
+type Job = RouterOutputs["jobs"]["getAll"]["jobListings"][0];
 
 
 export const HomeContent: FC = () => {
   const router = useRouter();
   const [search, setSearch] = useState<string>('');
+  const [showRemote, setShowRemote] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 10;
   const debouncedValue = useDebounce<string>(search, 1000);
 
-  const { data: jobs, isLoading, isFetching } = api.jobs.getAll.useQuery({
+  const { data: jobData, isLoading, isFetching } = api.jobs.getAll.useQuery({
     title: debouncedValue,
     company: debouncedValue,
     location: debouncedValue,
     // remote: showRemote ? true : false,
+    skip: (currentPage - 1) * itemsPerPage,
+    take: itemsPerPage,
   });
+  const jobs = jobData?.jobListings;
+  const totalCount = jobData?.totalCount;
+  const numberOfPages = totalCount ? Math.ceil(totalCount / itemsPerPage) : 1;
   const { data: sessionData } = useSession();
-
-  const [showRemote, setShowRemote] = useState<boolean>(false);
 
   const addView = api.jobs.addView.useMutation();
 
@@ -36,7 +43,6 @@ export const HomeContent: FC = () => {
     addView.mutate({ id: jobId });
     void router.push(`/job/${jobId}`);
   };
-
 
   return (
     <div className="p-4 md:p-16 flex flex-col align-center items-center w-screen justify-center max-w-6xl mx-auto">
@@ -102,6 +108,15 @@ export const HomeContent: FC = () => {
           )}
         </div>
       )}
+      <div className="mt-6">
+        <Pagination
+        currentPage={currentPage}
+        numberOfPages={numberOfPages}
+        onPageChange={(page: number) => {
+          setCurrentPage(page);
+        }}
+      />
+      </div>
     </div>
   )
 };

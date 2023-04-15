@@ -8,19 +8,35 @@ export const jobRouter = createTRPCRouter({
     company: z.string().optional(),
     location: z.string().optional(),
     remote: z.boolean().optional(),
-  })).query(({ ctx, input }) => {
-    return ctx.prisma.jobListing.findMany({
+    skip: z.number().optional().default(0),
+    take: z.number().optional().default(10),
+  })).query(async ({ ctx, input }) => {
+    const jobListings = await ctx.prisma.jobListing.findMany({
       where: {
         OR: [
-          { title: { contains: input.title, mode: 'insensitive' } },
-          { company: { contains: input.company, mode: 'insensitive' } },
-          { location: { contains: input.location, mode: 'insensitive' } },
-          { remote: input.remote }
-        ]
-      }
+          { title: { contains: input.title, mode: "insensitive" } },
+          { company: { contains: input.company, mode: "insensitive" } },
+          { location: { contains: input.location, mode: "insensitive" } },
+          { remote: input.remote },
+        ],
+      },
+      skip: input.skip,
+      take: input.take,
     });
+    const totalCount = await ctx.prisma.jobListing.count({
+      where: {
+        OR: [
+          { title: { contains: input.title, mode: "insensitive" } },
+          { company: { contains: input.company, mode: "insensitive" } },
+          { location: { contains: input.location, mode: "insensitive" } },
+          { remote: input.remote },
+        ],
+      },
+    });
+    return { jobListings, totalCount };
   }),
-    getJob: publicProcedure.input(z.object({
+
+  getJob: publicProcedure.input(z.object({
     id: z.string(),
   })).query(({ ctx, input }) => {
     return ctx.prisma.jobListing.findUnique({
@@ -79,7 +95,7 @@ export const jobRouter = createTRPCRouter({
         },
       });
     }),
-    addApply: protectedProcedure
+  addApply: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.prisma.jobListing.update({
