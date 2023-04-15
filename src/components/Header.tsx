@@ -7,8 +7,6 @@ import Logo from '~/assets/LogoSmall.svg'
 export const Header: FC = () => {
   const { data: sessionData } = useSession();
 
-  console.log(sessionData)
-
   return (
     <div className="navbar bg-base-300">
       <div className="navbar-start">

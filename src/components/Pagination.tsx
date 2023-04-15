@@ -34,8 +34,6 @@ const Pagination = ({
 
   const lastPage = paginationRange && paginationRange[paginationRange.length - 1];
 
-  console.log('hello', currentPage, lastPage)
-
   return (
     <div className="flex gap-3 justify-center">
       <button
