@@ -17,7 +17,7 @@ const Job = () => {
 
   return (
     <div className="p-4 md:p-16 flex flex-col align-center items-center w-screen justify-center max-w-6xl mx-auto ">
-      <div className="stats bg-primary text-primary-content">
+      <div className="stats bg-primary text-primary-content mb-6">
         <div className="stat">
           <div className="stat-title">Job views</div>
           <div className="stat-value">{job.views}</div>
@@ -33,7 +33,6 @@ const Job = () => {
           </div>
         </div>
       </div>
-      <p>Job: {pid}</p>
       <div className="flex flex-col gap-4 w-full">
         <h1 className="text-4xl">{job.title}</h1>
         <h2 className="text-2xl">Job Description</h2>
