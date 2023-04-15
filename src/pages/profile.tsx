@@ -1,16 +1,24 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { useState } from "react";
+import Pagination from "~/components/Pagination";
 import { Spinner } from "~/components/Spinner";
 import { api } from "~/utils/api";
 
 const Profile: NextPage = () => {
-  const { data: userJobs, refetch: refetchUserJobs, isLoading, isFetching } = api.profile.getJobs.useQuery();
+  const { data, refetch: refetchUserJobs, isLoading, isFetching } = api.profile.getJobs.useQuery();
 
   const deleteJob = api.profile.deleteJob.useMutation({
     onSuccess: () => {
       void refetchUserJobs();
     },
   });
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 10;
+  const userJobs = data?.userJobs;
+  const totalCount = data?.totalCount;
+  const numberOfPages = totalCount ? Math.ceil(totalCount / itemsPerPage) : 1;
   return (
     <>
       <Head>
@@ -55,6 +63,17 @@ const Profile: NextPage = () => {
                   </div>
                 ))}
               </div>
+              {numberOfPages > 1 && (
+                <div className="mt-6">
+                  <Pagination
+                    currentPage={currentPage}
+                    numberOfPages={numberOfPages}
+                    onPageChange={(page: number) => {
+                      setCurrentPage(page);
+                    }}
+                  />
+                </div>
+              )}
             </>
           )}
         </div>

@@ -87,36 +87,40 @@ export const HomeContent: FC = () => {
         </div>
       )}
       {jobs && !isLoading && !isFetching && (
-        <div className="flex flex-col w-full py-4 max-w-4xl gap-4">
-          {jobs.map((job: Job) => (
-            <div
-              key={job.id}
-              onClick={() => void goToJob(job.id)}
-              className="flex flex-col gap-8 md:flex-row justify-between align-center md:items-center border-4 border-black p-4">
-              <div className="flex flex-col">
-                <h1>{job.title}</h1>
-                <p>{job.company}</p>
-                <p className="bg-accent">
-                  {`$${job.salaryMin.toLocaleString()} - $${job.salaryMax.toLocaleString()}`}
-                </p>
+        <>
+          <div className="flex flex-col w-full py-4 max-w-4xl gap-4">
+            {jobs.map((job: Job) => (
+              <div
+                key={job.id}
+                onClick={() => void goToJob(job.id)}
+                className="flex flex-col gap-8 md:flex-row justify-between align-center md:items-center border-4 border-black p-4">
+                <div className="flex flex-col">
+                  <h1>{job.title}</h1>
+                  <p>{job.company}</p>
+                  <p className="bg-accent">
+                    {`$${job.salaryMin.toLocaleString()} - $${job.salaryMax.toLocaleString()}`}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <p className="text-xs">{dayjs(job.createdAt).fromNow()}</p>
+                </div>
               </div>
-              <div className="flex gap-2">
-                <p className="text-xs">{dayjs(job.createdAt).fromNow()}</p>
-              </div>
+            )
+            )}
+          </div>
+          {numberOfPages > 1 && (
+            <div className="mt-6">
+              <Pagination
+                currentPage={currentPage}
+                numberOfPages={numberOfPages}
+                onPageChange={(page: number) => {
+                  setCurrentPage(page);
+                }}
+              />
             </div>
-          )
           )}
-        </div>
+        </>
       )}
-      <div className="mt-6">
-        <Pagination
-        currentPage={currentPage}
-        numberOfPages={numberOfPages}
-        onPageChange={(page: number) => {
-          setCurrentPage(page);
-        }}
-      />
-      </div>
     </div>
   )
 };
