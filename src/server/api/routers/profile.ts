@@ -7,9 +7,9 @@ export const profileRouter = createTRPCRouter({
     skip: z.number().optional().default(0),
     take: z.number().optional().default(10),
   })).query(async ({ ctx, input }) => {
-    const userJobs = await ctx.prisma.jobListing.findMany({
+    const companyJobListings = await ctx.prisma.jobListing.findMany({
       where: {
-        userId: ctx.session.user.id,
+        companyUserId: ctx.session.user.id
       },
       skip: input.skip,
       take: input.take,
@@ -17,10 +17,10 @@ export const profileRouter = createTRPCRouter({
 
     const totalCount = await ctx.prisma.jobListing.count({
       where: {
-        userId: ctx.session.user.id,
+        companyUserId: ctx.session.user.id,
       }
     })
-    return { userJobs, totalCount }
+    return { companyJobListings, totalCount }
   }),
   deleteJob: protectedProcedure
     .input(z.object({ id: z.string() }))

@@ -61,8 +61,6 @@ model User {
   sessions       Session[]
   jobSeeker      JobSeeker?
   company        Company?
-  JobListing     JobListing[]
-  JobApplication JobApplication[]
 }
 
 // Job Seeker Model
@@ -71,7 +69,6 @@ model JobSeeker {
   user   User    @relation(fields: [userId], references: [id])
   name   String
   cv     String?
-
   jobApplications JobApplication[]
   // ... other fields specific to job seekers
 }
@@ -91,7 +88,6 @@ model JobListing {
   id                  String           @id @default(cuid())
   title               String
   description         String
-  company             String
   tags                String[]
   promoted            Boolean          @default(false)
   salaryMin           Int
@@ -101,24 +97,20 @@ model JobListing {
   applicationDeadline DateTime?
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
-  userId              String
-  user                User             @relation(fields: [userId], references: [id])
+  companyUserId       String
+  company             Company          @relation(fields: [companyUserId], references: [userId])
   jobApplications     JobApplication[]
   views               Int              @default(0)
   applyClicked        Int              @default(0)
-  Company             Company?         @relation(fields: [companyUserId], references: [userId])
-  companyUserId       String?
 }
 
 // Job Application Model
 model JobApplication {
   id              String     @id @default(cuid())
   jobId           String
-  userId          String
+  jobSeekerUserId String
   jobListing      JobListing @relation(fields: [jobId], references: [id])
-  user            User       @relation(fields: [userId], references: [id])
+  jobSeeker       JobSeeker  @relation(fields: [jobSeekerUserId], references: [userId])
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
-  JobSeeker       JobSeeker? @relation(fields: [jobSeekerUserId], references: [userId])
-  jobSeekerUserId String?
 }
