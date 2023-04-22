@@ -103,7 +103,7 @@ export const HomeContent: FC = () => {
                 className="flex flex-col gap-8 md:flex-row justify-between align-center md:items-center border-4 border-black p-4">
                 <div className="flex flex-col">
                   <h1>{job.title}</h1>
-                  <p>{job.company}</p>
+                  <p>{job.company.companyName}</p>
                   <p className="bg-accent">
                     {`$${job.salaryMin.toLocaleString()} - $${job.salaryMax.toLocaleString()}`}
                   </p>

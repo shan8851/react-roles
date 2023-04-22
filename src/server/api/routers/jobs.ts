@@ -22,6 +22,9 @@ export const jobRouter = createTRPCRouter({
       },
       skip: input.skip,
       take: input.take,
+      include: {
+        company: true
+      }
     });
     const totalCount = await ctx.prisma.jobListing.count({
       where: {
