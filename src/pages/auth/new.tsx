@@ -1,17 +1,16 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 
-
-
 const Welcome: NextPage = () => {
-const router = useRouter();
+  const router = useRouter();
 
-  const [role, setRole] = useState<string>("jobSeeker");
+  const [role, setRole] = useState<"JOB_SEEKER" | "COMPANY">("JOB_SEEKER");
+  const [name, setName] = useState<string>("");
   const {
     register,
     handleSubmit,
@@ -24,13 +23,23 @@ const router = useRouter();
     companyName: string;
   };
 
-const addCompany = api.account.updateUserToCompany.useMutation();
+const setUserRole = api.account.setUserRole.useMutation();
 
   const onSubmit = async (data: FormData) => {
-    console.log('fired', data)
-  await addCompany.mutateAsync(data);
-  await router.push("/profile");
-};
+      await setUserRole.mutateAsync({
+    role,
+    companyName: data.companyName,
+  });
+    await router.push("/profile");
+  };
+
+  const onJobSeekerClick = async () => {
+    await setUserRole.mutateAsync({
+      role,
+      name,
+    });
+    await router.push("/");
+  }
 
   return (
     <>
@@ -53,8 +62,8 @@ const addCompany = api.account.updateUserToCompany.useMutation();
                   type="radio"
                   name="radio-10"
                   className="radio checked:bg-primary"
-                  checked={role === 'jobSeeker'}
-                  onChange={() => setRole('jobSeeker')}
+                  checked={role === 'JOB_SEEKER'}
+                  onChange={() => setRole('JOB_SEEKER')}
                 />
               </label>
             </div>
@@ -65,16 +74,18 @@ const addCompany = api.account.updateUserToCompany.useMutation();
                   type="radio"
                   name="radio-10"
                   className="radio checked:bg-primary"
-                  checked={role === 'company'}
-                  onChange={() => setRole('company')}
+                  checked={role === 'COMPANY'}
+                  onChange={() => setRole('COMPANY')}
                 />
               </label>
             </div>
-            {role === 'jobSeeker' && (
-              <Link href="/" className="btn btn-lg btn-primary mt-4">See jobs</Link>
+            {role === 'JOB_SEEKER' && (
+              <div className="flex flex-col gap-4">
+                <input type="text" onChange={e => setName(e.target.value)} />
+                <button onClick={onJobSeekerClick} className="btn btn-lg btn-primary mt-4">See jobs</button>
+              </div>
             )}
-            {role === 'company' && (
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            {role === 'COMPANY' && (
               <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-4">
                 <div className="form-control w-full">
                   <label className={`input-group input-group-vertical border-4 ${errors.companyName ? 'border-error' : 'border-black'}`}>

@@ -37,8 +37,6 @@ export const HomeContent: FC = () => {
   const numberOfPages = totalCount ? Math.ceil(totalCount / itemsPerPage) : 1;
   const { data: sessionData } = useSession();
 
-  console.debug(sessionData)
-
   const addView = api.jobs.addView.useMutation();
 
   const goToJob = (jobId: string) => {
@@ -52,27 +50,14 @@ export const HomeContent: FC = () => {
       <p className="my-6 text-md font-normal lg:text-lg sm:px-16 xl:px-48 text-center">
         Hey champ! You&apos;ve landed in the perfect spot to find your dream React job. Browse through our collection of handpicked opportunities, tailor-made for the awesome React developer you are. Ready, set, explore! Your next big adventure is just a few clicks away.
       </p>
-      {sessionData?.user && (
+      {sessionData?.user && sessionData.user.role === "COMPANY" && (
         <Link href='/post-job'>
           <button className="btn p-4 btn-lg">
             Post a job
           </button>
         </Link>
       )}
-      {isLoading || isFetching && (
-        <div className="flex justify-center items-center w-full h-64">
-          <Spinner />
-        </div>
-      )}
-      {!isLoading && !isFetching && jobs?.length === 0 && (
-        <div className="alert alert-error shadow-lg">
-          <div>
-            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <span>No jobs found.</span>
-          </div>
-        </div>
-      )}
-      {!isLoading && !isFetching && jobs && jobs.length > 0 && (
+      {jobs && (
         <div className="flex flex-col sm:flex-row my-4 md:my-8 sm:justify-between sm:items-center w-full gap-4 max-w-4xl">
           <div className="form-control w-full max-w-2xl">
             <input value={search} onChange={e => setSearch(e.target.value)} type="text" placeholder="Search by job title, company or location" className="input input-bordered border-4 border-black w-full outline-none" />
@@ -93,6 +78,19 @@ export const HomeContent: FC = () => {
           </div>
         </div>
       )}
+      {isLoading || isFetching && (
+        <div className="flex justify-center items-center w-full h-64">
+          <Spinner />
+        </div>
+      )}
+      {!isLoading && !isFetching && jobs?.length === 0 && (
+        <div className="alert alert-error shadow-lg">
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span>No jobs found.</span>
+          </div>
+        </div>
+      )}
       {jobs && !isLoading && !isFetching && (
         <>
           <div className="flex flex-col w-full py-4 max-w-4xl gap-4">
@@ -100,7 +98,7 @@ export const HomeContent: FC = () => {
               <div
                 key={job.id}
                 onClick={() => void goToJob(job.id)}
-                className="flex flex-col gap-8 md:flex-row justify-between align-center md:items-center border-4 border-black p-4">
+                className="flex flex-col gap-8 md:flex-row justify-between align-center md:items-center border-4 border-black hover:border-secondary p-4 cursor-pointer">
                 <div className="flex flex-col">
                   <h1>{job.title}</h1>
                   <p>{job.company.companyName}</p>

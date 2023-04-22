@@ -1,11 +1,15 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { type FC } from "react";
 import Logo from '~/assets/LogoSmall.svg'
+import Avatar from '~/assets/avatar.png'
 
 export const Header: FC = () => {
   const { data: sessionData } = useSession();
+  const router = useRouter();
+
 
   return (
     <div className="navbar bg-base-300">
@@ -18,9 +22,6 @@ export const Header: FC = () => {
             <li>
               <Link className="btn btn-ghost normal-case text-xl" href='/'>Home</Link>
             </li>
-            {sessionData?.user && (
-              <li><Link className="btn btn-ghost normal-case text-xl" href='/post-job'>Post a job</Link></li>
-            )}
             <li>
               <Link className="btn btn-ghost normal-case text-xl" href='/about'>About</Link>
             </li>
@@ -46,9 +47,6 @@ export const Header: FC = () => {
           {sessionData?.user && (
             <li><Link className="btn btn-ghost normal-case text-md md:text-xl" href='/profile'>Profile</Link></li>
           )}
-          {sessionData?.user && (
-            <li><Link className="btn btn-ghost normal-case text-md md:text-xl" href='/post-job'>Post a job</Link></li>
-          )}
           <li>
             <Link className="btn btn-ghost normal-case text-md md:text-xl" href='/about'>About</Link>
           </li>
@@ -60,14 +58,18 @@ export const Header: FC = () => {
       <div className="navbar-end">
         {sessionData?.user ? (
           <a
-            onClick={() => void signOut()}
+            onClick={() => {
+              void signOut({ callbackUrl: router.basePath + "/" });
+            }}
+            className="flex items-center gap-4 cursor-pointer hover:text-secondary"
           >
+            sign out
             <div className="w-10 rounded-full">
               <Image
                 width={56}
                 height={56}
-                src={sessionData?.user?.image ?? ""}
-                alt={sessionData?.user?.name ?? ""}
+                src={sessionData?.user?.image ?? Avatar}
+                alt={sessionData?.user?.name ?? "name"}
               />
             </div>
           </a>

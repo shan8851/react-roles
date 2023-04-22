@@ -6,14 +6,14 @@ import { api } from '~/utils/api';
 const Job = () => {
   const router = useRouter()
   const { pid } = router.query
-  const { data: job, refetch } = api.jobs.getJob.useQuery({ id: pid as string });
-  const applyClicked = api.jobs.addApply.useMutation({
-    onSuccess: () => {
-      void refetch();
-    },
-  });
+  const { data: job } = api.jobs.getJob.useQuery({ id: pid as string });
+  const applyClicked = api.application.applyForJob.useMutation();
 
-  if (!job) return <Spinner />
+  if (!job) return (
+    <div className="h-screen w-screen flex items-center justify-center">
+      <Spinner />
+    </div>
+  )
 
   return (
     <div className="p-4 md:p-16 flex flex-col align-center items-center w-screen justify-center max-w-6xl mx-auto ">
@@ -47,7 +47,7 @@ const Job = () => {
         </div>
         <button
           className="btn w-full my6"
-          onClick={() => applyClicked.mutate({ id: job.id })}
+          onClick={() => applyClicked.mutate({ jobId: job.id })}
         >
           Apply
         </button>

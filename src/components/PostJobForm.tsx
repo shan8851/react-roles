@@ -2,8 +2,7 @@ import { useState } from "react";
 import { api } from "~/utils/api";
 
 export const PostJobForm: React.FC = () => {
-  const defaultFormState = {
-    company: "",
+ const defaultFormState = {
     title: "",
     salaryMin: 0,
     salaryMax: 0,
@@ -56,18 +55,6 @@ export const PostJobForm: React.FC = () => {
     <div className="flex flex-col w-screen max-w-4xl mx-auto p-4 md:p-16">
       {success && <SuccessMessage />}
       <div className="flex flex-col gap-4">
-        <div className="form-control w-full">
-          <label className="input-group input-group-vertical border-4 border-black">
-            <span className="py-2">Company:</span>
-            <input
-              value={formState.company}
-              onChange={e => setFormState({ ...formState, company: e.target.value })}
-              type="text"
-              placeholder="OpenAI"
-              className="input w-full outline-none"
-            />
-          </label>
-        </div>
         <div className="form-control w-full">
           <label className="input-group input-group-vertical border-4 border-black">
             <span className="py-2">Job Title:</span>
@@ -190,10 +177,6 @@ export const PostJobForm: React.FC = () => {
       <button
         className="btn btn-lg p-2 w-full mt-2"
         onClick={() => {
-          const jobModal = document.getElementById('job-modal') as HTMLInputElement;
-          if (jobModal) {
-            jobModal.checked = false;
-          }
           createJob.mutate(formState)
         }}
       >
