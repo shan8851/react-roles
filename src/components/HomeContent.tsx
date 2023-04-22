@@ -37,7 +37,7 @@ export const HomeContent: FC = () => {
   const numberOfPages = totalCount ? Math.ceil(totalCount / itemsPerPage) : 1;
   const { data: sessionData } = useSession();
 
-  console.debug(jobData)
+  console.debug(sessionData)
 
   const addView = api.jobs.addView.useMutation();
 
