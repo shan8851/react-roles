@@ -8,17 +8,17 @@ import { api } from "~/utils/api";
 const Profile: NextPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 10;
-  const { data, refetch: refetchUserJobs, isLoading, isFetching } = api.profile.getJobs.useQuery({
+  const { data, refetch: refetchCompanyListings, isLoading, isFetching } = api.profile.getJobs.useQuery({
     skip: (currentPage - 1) * itemsPerPage,
     take: itemsPerPage,
   });
 
   const deleteJob = api.profile.deleteJob.useMutation({
     onSuccess: () => {
-      void refetchUserJobs();
+      void refetchCompanyListings();
     },
   });
-  const userJobs = data?.userJobs;
+  const companyListings = data?.companyJobListings;
   const totalCount = data?.totalCount;
   const numberOfPages = totalCount ? Math.ceil(totalCount / itemsPerPage) : 1;
 
@@ -41,11 +41,11 @@ const Profile: NextPage = () => {
               <Spinner />
             </div>
           )}
-          {!isLoading && !isFetching && userJobs && userJobs.length > 0 && (
+          {!isLoading && !isFetching && companyListings && companyListings.length > 0 && (
             <>
               <h1 className="mb-2 text-2xl font-extrabold bg-primary p-2 self-start">Your Jobs:</h1>
               <div className="flex flex-col w-full py-4 max-w-4xl gap-8">
-                {!isLoading && !isFetching && userJobs?.map((job) => (
+                {!isLoading && !isFetching && companyListings?.map((job) => (
                   <div className="flex gap-4 items-center justify-between" key={job.id}>
                     <div className="flex gap-3">
                       <h1>{job.title}</h1>
