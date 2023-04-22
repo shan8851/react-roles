@@ -77,8 +77,8 @@ create: protectedProcedure
       where: { id: ctx.session.user.id },
     });
 
-    // Check if the user is an employer
-    if (user?.role !== 'EMPLOYER') {
+    // Check if the user is an company
+    if (user?.role !== 'COMPANY') {
       throw new Error('Only employers can create job listings');
     }
 

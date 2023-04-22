@@ -10,7 +10,7 @@ datasource db {
 // Enums
 enum UserRole {
   JOB_SEEKER
-  EMPLOYER
+  COMPANY
   ADMIN
 }
 
@@ -70,7 +70,6 @@ model JobSeeker {
   name   String
   cv     String?
   jobApplications JobApplication[]
-  // ... other fields specific to job seekers
 }
 
 model Company {
@@ -80,7 +79,6 @@ model Company {
   companyName        String
   logo               String?
   companyDescription String?
-  // ... other fields specific to employers (companies)
 }
 
 // Job Listing Model

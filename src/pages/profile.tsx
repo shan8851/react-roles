@@ -1,11 +1,13 @@
 import { type NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
+import Link from "next/link";
 import { useState } from "react";
 import Pagination from "~/components/Pagination";
-import { Spinner } from "~/components/Spinner";
 import { api } from "~/utils/api";
 
 const Profile: NextPage = () => {
+  const { data: sessionData } = useSession();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 10;
   const { data, refetch: refetchCompanyListings, isLoading, isFetching } = api.profile.getJobs.useQuery({
@@ -22,7 +24,10 @@ const Profile: NextPage = () => {
   const totalCount = data?.totalCount;
   const numberOfPages = totalCount ? Math.ceil(totalCount / itemsPerPage) : 1;
 
-  console.debug(data)
+  const { data: companyData, isLoading: companyDataLoding, error } = api.account.getCompanyData.useQuery();
+
+  console.debug(companyData)
+
   return (
     <>
       <Head>
@@ -32,14 +37,18 @@ const Profile: NextPage = () => {
       </Head>
       <main>
         <div className="pt-16 pb-4 flex flex-col align-center items-center w-screen justify-center max-w-6xl mx-auto">
-          <h1 className="mb-4 text-3xl font-extrabold lg:text-4xl text-center">Profile!</h1>
+          {companyData?.companyName && (
+            <h1 className="mb-4 text-3xl font-extrabold lg:text-4xl text-center">{`Welcome: ${companyData?.companyName}`}</h1>
+          )}
           <p className="mb-6 text-md font-normal lg:text-lg sm:px-16 xl:px-48 text-center">
             Manage your profile here!
           </p>
-          {isLoading || isFetching && (
-            <div className="flex justify-center items-center w-full h-64">
-              <Spinner />
-            </div>
+          {sessionData?.user && (
+            <Link href='/post-job'>
+              <button className="btn p-4 btn-lg">
+                Post a job
+              </button>
+            </Link>
           )}
           {!isLoading && !isFetching && companyListings && companyListings.length > 0 && (
             <>
